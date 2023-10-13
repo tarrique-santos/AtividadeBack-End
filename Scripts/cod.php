@@ -1,19 +1,25 @@
 <?php
 
+// Define a URL da API
 $apiUrl = 'https://a.free.micuim.ravendb.cloud'; // Substitua pela URL da sua API .NET
 
+// Inicializa variáveis
 $i = 1;
 $cadastrar = true;
 
 do {
-    echo "[ C ] ~ Cadastrar Funcionário. \n[ L ] ~ Listar Funcionário. \n[ E ] ~ Editar Funcionário. \n[ D ] ~ Deletar Funcionário. \n[ S ] ~ Sair do programa. \nOpção: ";
+    // Exibe as opções para o usuário
+    echo "[ C ] ~ Cadastrar Funcionário. \n[ S ] ~ Sair do programa. \nOpção: ";
     $opc = readline();
 
+    // Filtra e converte a opção do usuário para maiúsculas
     $opc = filter_var($opc, FILTER_SANITIZE_STRING);
     $opc = strtoupper($opc);
 
+    // Realiza a ação com base na opção escolhida
     switch ($opc) {
         case 'C':
+            // Solicita informações do funcionário
             echo "Digite o nome completo do funcionário: ";
             $nomeCompleto = readline();
             echo "Digite o CPF do funcionário: ";
@@ -39,46 +45,11 @@ do {
             $response = curl_exec($ch);
             curl_close($ch);
 
-            if ($response === false) {
-                echo "Erro ao cadastrar funcionário.\n";
-            } else {
-                echo "Funcionário cadastrado com sucesso!\n";
-            }
-
+            // Verifica se o cadastro foi bem-sucedido
+            if ($response === false) echo "Erro ao cadastrar funcionário.\n";
+            else  echo "Funcionário cadastrado com sucesso!\n";
+            
             $i += 1;
-            break;
-
-        case 'L':
-            // Realize uma solicitação HTTP GET para listar funcionários
-            $ch = curl_init($apiUrl . '/funcionarios');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($ch);
-            curl_close($ch);
-
-            // Decodifique o JSON retornado
-            $funcionarios = json_decode($response, true);
-
-            if ($funcionarios === null) {
-                echo "Erro ao obter a lista de funcionários.\n";
-            } else {
-                foreach ($funcionarios as $funcionario) {
-                    echo "Nome: " . $funcionario['nome'] . "\n";
-                    echo "CPF: " . $funcionario['cpf'] . "\n";
-                    echo "Data de Nascimento: " . $funcionario['dataNascimento'] . "\n";
-                    echo "Celular: " . $funcionario['celular'] . "\n\n";
-                }
-            }
-
-            break;
-
-        case 'E':
-            // Implemente a edição aqui
-
-            break;
-
-        case 'D':
-            // Implemente a exclusão aqui
-
             break;
 
         case 'S':
@@ -90,4 +61,3 @@ do {
             echo "Opção digitada não condiz com as opções acima! \nDigite uma opção válida.\n";
     }
 } while ($cadastrar);
-?>
